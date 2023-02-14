@@ -36,12 +36,12 @@ jobs:
           APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
           POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
 
-      - template: ../shared/steps/sonar-cloud-prepare.yaml
+      - template: ../shared/steps/sonar-cloud-prepare.yml
 
       - template: ../shared/steps/maven-test.yml
 
       - template: ../shared/steps/maven-build-and-scan-sonar.yml
 
-      - template: ../../shared/steps/sonar/sonar-publish.yaml
+      - template: ../../shared/steps/sonar/sonar-publish.yml
 
-      - template: ../../shared/steps/sonar/sonar-build-breaker.yaml
+      - template: ../../shared/steps/sonar/sonar-build-breaker.yml

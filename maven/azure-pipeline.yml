@@ -30,7 +30,7 @@ stages:
     variables:
       APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
     jobs: 
-      - template: ./jobs/validations-job.yaml
+      - template: ./jobs/validations-job.yml
         parameters:
           APPLICATION_VERSION: $(APPLICATION_VERSION)
           EXECUTE_GITVERSION: true
