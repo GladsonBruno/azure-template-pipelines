@@ -12,7 +12,6 @@ parameters:
 stages:
   - stage: validations_stage
     displayName: "Validations"
-    dependsOn: [ build_stage ]
     condition: | 
       or(
         eq(variables['Build.Reason'], 'PullRequest'),
