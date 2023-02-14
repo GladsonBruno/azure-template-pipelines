@@ -1,0 +1,38 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: JDK_USED_VERSION
+  type: string
+  default: $(JAVA_JDK_VERSION)
+- name: POM_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/pom.xml
+
+stages:
+  - stage: validations_stage
+    displayName: "Validations"
+    dependsOn: [ build_stage ]
+    condition: | 
+      or(
+        eq(variables['Build.Reason'], 'PullRequest'),
+        and(
+          ne(variables['Build.Reason'], 'PullRequest'),
+          succeeded('build_stage'),
+          or(
+            eq(variables['Build.SourceBranchName'], 'master'),
+            eq(variables['Build.SourceBranchName'], 'develop'),
+            contains(variables['Build.SourceBranch'], 'refs/heads/release/'),
+            contains(variables['Build.SourceBranch'], 'refs/heads/hotfix/')
+          )
+        )
+      )
+    variables:
+      APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
+    jobs: 
+      - template: ./jobs/validations-job.yaml
+        parameters:
+          APPLICATION_VERSION: $(APPLICATION_VERSION)
+          EXECUTE_GITVERSION: true
+          JDK_USED_VERSION: ${{ parameters.JDK_USED_VERSION }}
+          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
