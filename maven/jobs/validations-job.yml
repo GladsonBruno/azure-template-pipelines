@@ -31,7 +31,7 @@ jobs:
 
         - template: ../../shared/steps/gitversion/execute-gitversion.yml
 
-      - template: ../shared/steps/maven-update-project-version.yml
+      - template: ../shared/steps/update-project-version.yml
         parameters:
           APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
           POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
