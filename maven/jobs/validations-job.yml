@@ -42,6 +42,6 @@ jobs:
 
       - template: ../shared/steps/maven-build-and-scan-sonar.yml
 
-      - template: ../../shared/steps/sonar/sonar-publish.yml
+      - template: ../../shared/steps/sonar/sonar-cloud-publish.yml
 
-      - template: ../../shared/steps/sonar/sonar-build-breaker.yml
+      - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
