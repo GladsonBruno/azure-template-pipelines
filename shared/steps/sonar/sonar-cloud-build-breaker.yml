@@ -1,0 +1,16 @@
+parameters:
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: 'portifoliogladson'
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: 'SonarCloud'
+
+
+steps:
+  - task: sonarcloud-buildbreaker@2
+    displayName: '[SonarCloud] Validate Quality Gate'
+    inputs:
+      SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+      organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+    name: validate_quality_gate

@@ -1,0 +1,22 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: POM_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/pom.xml
+
+steps:
+  - script: |
+      sudo apt-get install xmlstarlet
+    displayName: "[Setup] Install Package xmlstarlet"
+
+  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    - script: |
+        xmlstarlet edit -L --update '/_:project/_:version' --value '$(GitVersion.SemVer)' ${{ parameters.POM_FILE_LOCATION }}
+      displayName: "[Setup] Update project version"
+
+  - ${{ else }}:
+    - script: |
+        xmlstarlet edit -L --update '/_:project/_:version' --value '${{ parameters.APPLICATION_VERSION }}' ${{ parameters.POM_FILE_LOCATION }}
+      displayName: "[Setup] Update project version"

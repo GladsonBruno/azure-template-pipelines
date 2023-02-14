@@ -1,0 +1,34 @@
+parameters:
+- name: JACOCO_REPORT_PATH
+  type: string
+  default: $(JACOCO_REPORT_PATH)
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: 'portifoliogladson'
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: 'SonarCloud'
+- name: SONAR_EXCLUSIONS
+  type: string
+  default: '$(SONAR_EXCLUSIONS)'
+- name: SONAR_PROJECT_KEY
+  type: string
+  default: $(SONAR_PROJECT_KEY)
+- name: SONAR_PROJECT_NAME
+  type: string
+  default: $(SONAR_PROJECT_NAME)
+
+steps:
+- task: SonarCloudPrepare@1
+  displayName: "[SonarCloud] Prepare"
+  inputs:
+    SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+    organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+    scannerMode: Other
+    extraProperties: |
+     # Additional properties that will be passed to the scanner,
+     # Put one key=value per line, example:
+     sonar.exclusions=${{ parameters.SONAR_EXCLUSIONS }}
+     sonar.projectKey=${{ parameters.SONAR_PROJECT_KEY }}
+     sonar.projectName=${{ parameters.SONAR_PROJECT_NAME }}
+     sonar.coverage.jacoco.xmlReportPaths=${{ parameters.JACOCO_REPORT_PATH }}
