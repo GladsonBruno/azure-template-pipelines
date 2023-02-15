@@ -1,0 +1,3 @@
+steps:
+  - task: SonarCloudAnalyze@1
+    displayName: '[SonarCloud] Analyze'

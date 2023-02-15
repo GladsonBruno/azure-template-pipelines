@@ -26,29 +26,31 @@ parameters:
 - name: EXECUTE_GITVERSION
   type: boolean
   default: true
-- name: JDK_USED_VERSION
+- name: NODE_USED_VERSION
   type: string
-  default: $(JAVA_JDK_VERSION)
-- name: POM_FILE_LOCATION
+  default: $(NODEJS_VERSION)
+- name: PACKAGE_JSON_FILE_LOCATION
   type: string
-  default: $(Build.SourcesDirectory)/pom.xml
+  default: $(Build.SourcesDirectory)/package.json
 - name: VM_IMAGE
   type: string
   default: '' # Exemplo: ubuntu-20.04
+
+
 
 jobs:
   - job: build_job
     displayName: "Build"
     pool:
-      vmImage: ${{ parameters.VM_IMAGE }}
+      vmImage: ubuntu-20.04
       demands:
         - java
     steps:
       - template: ../../shared/steps/checkout-repository.yml
 
-      - template: ../shared/steps/use-specific-java-version.yml
+      - template: ../shared/steps/use-specific-node-version.yml
         parameters:
-          JDK_USED_VERSION: ${{parameters.JDK_USED_VERSION}}
+          NODE_USED_VERSION: ${{ parameters.NODE_USED_VERSION }}
 
       - ${{ if eq(parameters['EXECUTE_GITVERSION'], 'True') }}:
         - template: ../../shared/steps/gitversion/setup-gitversion.yml
@@ -58,9 +60,7 @@ jobs:
       - template: ../shared/steps/update-project-version.yml
         parameters:
           APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
-          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
-
-      - template: ../shared/steps/maven-package.yml
+          PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
 
       - template: ../../shared/steps/docker/docker-build.yml
         parameters:
@@ -78,8 +78,3 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
           DOCKER_IMAGE_TAG: ${{ parameters.APPLICATION_VERSION }}
           DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
-
-      - ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
-        - template:  ../../shared/steps/generate-tag.yml
-          parameters:
-            APPLICATION_VERSION: ${{parameters.APPLICATION_VERSION}}

@@ -1,0 +1,11 @@
+parameters:
+- name: COVERAGE_REPORT_PATH
+  type: string
+  default: $(COVERAGE_REPORT_PATH)
+
+steps:
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage from ${{ parameters.COVERAGE_REPORT_PATH }}'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '${{ parameters.COVERAGE_REPORT_PATH }}'

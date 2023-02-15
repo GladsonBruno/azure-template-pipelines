@@ -20,12 +20,15 @@ parameters:
 - name: DOCKERFILE_PATH
   type: string
   default: '$(Build.SourcesDirectory)/Dockerfile'
-- name: JDK_USED_VERSION
+- name: IS_USING_YARN
+  type: boolean
+  default: true
+- name: NODE_USED_VERSION
   type: string
-  default: $(JAVA_JDK_VERSION)
-- name: POM_FILE_LOCATION
+  default: $(NODEJS_VERSION)
+- name: PACKAGE_JSON_FILE_LOCATION
   type: string
-  default: $(Build.SourcesDirectory)/pom.xml
+  default: $(Build.SourcesDirectory)/package.json
 - name: SONAR_CLOUD_ORGANIZATION
   type: string
   default: 'portifoliogladson'
@@ -57,8 +60,8 @@ stages:
         parameters:
           APPLICATION_VERSION: $(APPLICATION_VERSION)
           EXECUTE_GITVERSION: true
-          JDK_USED_VERSION: ${{ parameters.JDK_USED_VERSION }}
-          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
+          NODE_USED_VERSION: ${{ parameters.NODE_USED_VERSION }}
+          PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
           SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
           SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
           VM_IMAGE: ${{ parameters.VM_IMAGE }}
@@ -83,8 +86,8 @@ stages:
           DOCKERFILE_PATH: ${{ parameters.DOCKERFILE_PATH }}
           DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
           EXECUTE_GITVERSION: false
-          JDK_USED_VERSION: ${{ parameters.JDK_USED_VERSION }}
-          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
+          NODE_USED_VERSION: ${{ parameters.NODE_USED_VERSION }}
+          PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
           VM_IMAGE: ${{ parameters.VM_IMAGE }}
 
       - template: ../shared/jobs/trivy/check-container-vulnerabilities.yml

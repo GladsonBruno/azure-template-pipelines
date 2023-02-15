@@ -1,0 +1,14 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: PACKAGE_JSON_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/package.json
+
+steps:
+  - script: |
+      npm install -g json
+      json -I -f ${{ parameters.PACKAGE_JSON_FILE_LOCATION }} -e "this.version=\"${{ parameters.APPLICATION_VERSION }}\""
+      echo "${{ parameters.PACKAGE_JSON_FILE_LOCATION }} version updated to ${{ parameters.APPLICATION_VERSION }}"
+    displayName: '[Setup] Update ${{ parameters.PACKAGE_JSON_FILE_LOCATION }} version'

@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      npm run test:sonar
+    displayName: '[Test] NPM RUN TEST:SONAR'
