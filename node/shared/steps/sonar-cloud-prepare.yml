@@ -31,6 +31,7 @@ steps:
     configMode: 'manual'
     cliProjectKey: '${{parameters.SONAR_PROJECT_KEY}}'
     cliProjectName: '${{parameters.SONAR_PROJECT_NAME}}'
+    cliSources: '${{parameters.SONAR_PATH_SOURCES}}'
     extraProperties: |
       sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
       sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
