@@ -17,6 +17,9 @@ parameters:
 - name: SONAR_EXCLUSIONS
   type: string
   default: $(SONAR_EXCLUSIONS) # Exemplo: '**/*.spec.ts'
+- name: SONAR_LANGUAGE
+  type: string
+  default: $(SONAR_LANGUAGE) # Exemplo: 'ts ou js'
 - name: SONAR_REPORT_PATH
   type: string
   default: $(SONAR_REPORT_PATH) # Exemplo: coverage/lcov.info
@@ -36,4 +39,5 @@ steps:
       sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
       sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
       sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
+      sonar.language=${{parameters.SONAR_LANGUAGE}}
       sonar.dynamicAnalysis=reuseReports
