@@ -1,0 +1,71 @@
+parameters:
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: ''
+- name: DOCKER_REGISTRY
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_TAG
+  type: string
+  default: $(GitVersion.SemVer)
+- name: REPORT_BUILD_ARTIFACT_NAME_IN_PUBLISH
+  type: string
+  default: 'Docker Security Check Results'
+- name: REPORT_FILE_PATH
+  type: string
+  default: $(Agent.TempDirectory)/image-scan-results.json
+- name: REPORT_TEMPLATE_NAME
+  type: string
+  default: 'junit-container-vulnerabilities-template.tpl'
+- name: TEST_RESULT_FILES
+  type: string
+  default: '$(Agent.TempDirectory)/trivy-image-junit-report.xml'
+- name: TEST_TITLE
+  type: string
+  default: 'Trivy Container Vulnerabilities'
+- name: TRIVY_VERSION
+  type: string
+  default: '0.37.0'
+
+
+steps:
+
+  - template: ./download-trivy-vulnerabilities-scanner.yml
+    parameters:
+      TRIVY_VERSION: ${{ parameters.TRIVY_VERSION }}
+
+  - template: ./generate-junit-report-templates.yml
+
+  - template: ../docker/docker-login.yml
+    parameters:
+      CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME}}
+
+  - script: |
+      $(Agent.TempDirectory)/trivy_scanner/trivy -d image -f json -o ${{ parameters.REPORT_FILE_PATH }} ${{ parameters.DOCKER_REGISTRY }}/${{ parameters.DOCKER_IMAGE_NAME }}:${{ parameters.DOCKER_IMAGE_TAG }}
+    displayName: '[Trivy] Scan Container Image With Trivy'
+
+  - script: |
+      $(Agent.TempDirectory)/trivy_scanner/trivy image \
+        --exit-code 0 \
+        --format template \
+        --output ${{ parameters.TEST_RESULT_FILES }} \
+        --template "@templates/${{ parameters.REPORT_TEMPLATE_NAME }}" \
+        ${{ parameters.DOCKER_REGISTRY }}/${{ parameters.DOCKER_IMAGE_NAME }}:${{ parameters.DOCKER_IMAGE_TAG }}
+    displayName: '[Trivy] Generating Container Scanning Junit Report'
+
+  - template: ../docker/docker-logout.yml
+    parameters:
+      CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME}}
+
+  - template: ../publish-junit-test-results.yml
+    parameters:
+      TEST_RESULT_FILES: ${{ parameters.TEST_RESULT_FILES }}
+      TEST_TITLE: ${{ parameters.TEST_TITLE }}
+
+  - template: ../build_artifact/publish-build-artifact.yml
+    parameters:
+      PATH_TO_PUBLISH: ${{ parameters.REPORT_FILE_PATH }}
+      PIPELINE_BUILD_ARTIFACT_NAME: ${{ parameters.REPORT_BUILD_ARTIFACT_NAME_IN_PUBLISH }}

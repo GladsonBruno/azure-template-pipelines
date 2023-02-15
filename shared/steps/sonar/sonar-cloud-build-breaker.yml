@@ -1,10 +1,10 @@
 parameters:
 - name: SONAR_CLOUD_ORGANIZATION
   type: string
-  default: 'portifoliogladson'
+  default: ''
 - name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
   type: string
-  default: 'SonarCloud'
+  default: ''
 
 
 steps:

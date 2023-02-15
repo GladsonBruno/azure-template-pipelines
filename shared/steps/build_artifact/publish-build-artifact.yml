@@ -1,0 +1,18 @@
+parameters:
+- name: DISPLAY_NAME
+  type: string
+  default: 'PublishBuildArtifacts'
+- name: PATH_TO_PUBLISH
+  type: string
+  default: '$(Build.ArtifactStagingDirectory)'
+- name: PIPELINE_BUILD_ARTIFACT_NAME
+  type: string
+  default: 'PipelineArtifact'
+
+steps:
+- task: PublishBuildArtifacts@1
+  displayName: '${{ parameters.DISPLAY_NAME }}'
+  inputs:
+    ArtifactName: ${{parameters.PIPELINE_BUILD_ARTIFACT_NAME}}
+    PathtoPublish: ${{parameters.PATH_TO_PUBLISH}}    
+    publishLocation: 'Container'

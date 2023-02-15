@@ -11,12 +11,21 @@ parameters:
 - name: POM_FILE_LOCATION
   type: string
   default: $(Build.SourcesDirectory)/pom.xml
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: VM_IMAGE
+  type: string
+  default: '' # Exemplo: ubuntu-20.04
 
 jobs:
   - job: validate_unit_test_and_sonar_job
     displayName: "Unit Tests and SonarQube"
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ${{ parameters.VM_IMAGE }}
       demands:
         - java
     steps:
@@ -37,6 +46,9 @@ jobs:
           POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
 
       - template: ../shared/steps/sonar-cloud-prepare.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
 
       - template: ../shared/steps/maven-test.yml
 
@@ -45,3 +57,6 @@ jobs:
       - template: ../../shared/steps/sonar/sonar-cloud-publish.yml
 
       - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}

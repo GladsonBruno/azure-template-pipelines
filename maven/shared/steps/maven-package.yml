@@ -1,0 +1,12 @@
+steps:
+  - task: Maven@3
+    displayName: '[Build] Maven Package'
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'package -Dmaven.test.skip=true'
+      publishJUnitResults: false
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false

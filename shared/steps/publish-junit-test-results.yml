@@ -1,0 +1,17 @@
+parameters:
+- name: TEST_RESULT_FILES
+  type: string
+  default: '**/junit-report.xml'
+- name: TEST_TITLE
+  type: string
+  default: ''
+
+steps:
+  - task: PublishTestResults@2
+    displayName: 'Publish Junit Test Results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: ${{ parameters.TEST_RESULT_FILES }}
+      mergeTestResults: true
+      failTaskOnFailedTests: false
+      testRunTitle: ${{ parameters.TEST_TITLE }}

@@ -4,10 +4,10 @@ parameters:
   default: $(JACOCO_REPORT_PATH)
 - name: SONAR_CLOUD_ORGANIZATION
   type: string
-  default: 'portifoliogladson'
+  default: ''
 - name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
   type: string
-  default: 'SonarCloud'
+  default: ''
 - name: SONAR_EXCLUSIONS
   type: string
   default: '$(SONAR_EXCLUSIONS)'

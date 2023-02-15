@@ -1,0 +1,41 @@
+parameters:
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: DEPENDS_ON
+  type: object
+  default: []
+- name: DOCKER_REGISTRY
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_TAG
+  type: string
+  default: ''
+- name: TRIVY_VERSION
+  type: string
+  default: '0.37.0'
+- name: VM_IMAGE
+  type: string
+  default: '' # Exemplo: ubuntu-20.04
+
+jobs:
+  - job: scan_docker_image_job
+    condition: succeeded()
+    continueOnError: true
+    displayName: "Check Container Vulnerabilities"
+    dependsOn: ${{ parameters.DEPENDS_ON }}
+    pool:
+      vmImage: ${{ parameters.VM_IMAGE }}
+      demands:
+        - java
+    steps:
+      - template: ../../steps/trivy/image-vulnerabilities-scanning.yml
+        parameters:
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+          DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
+          DOCKER_IMAGE_TAG: ${{ parameters.DOCKER_IMAGE_TAG }}
+          DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
+          TRIVY_VERSION: ${{ parameters.TRIVY_VERSION }}
