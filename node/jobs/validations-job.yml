@@ -8,6 +8,9 @@ parameters:
 - name: EXECUTE_GITVERSION
   type: boolean
   default: true
+- name: IS_USING_YARN
+  type: boolean
+  default: true  
 - name: NODE_USED_VERSION
   type: string
   default: $(NODEJS_VERSION)
