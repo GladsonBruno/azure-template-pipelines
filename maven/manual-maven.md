@@ -14,7 +14,13 @@ O template Maven cobre os seguintes pontos:
 
 Um exemplo de utilização pode ser visto neste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml)
 
-Para utilizá-lo é necessário possuir um variable group com as seguintes variáveis cadastradas:
+### Pré requisitos
+* Possui o plugin do Jacoco configurado na aplicação.
+* Possuir pelo menos um teste unitário implementado ou vazio. ( Caso queira ter as informações de Code Coverage no Sonar e Azure. )
+
+### Utilização do template
+
+Para utilizar o template é necessário possuir um variable group com as seguintes variáveis cadastradas:
 * **IMAGE_NAME**: Nome que será atribuído ao seu container Docker.
 
 * **JACOCO_REPORT_PATH** Pasta no qual o report de code coverage do Jacoco será gerado. Por padrão o valor desta variável é: **/jacoco.xml
@@ -28,6 +34,7 @@ Para utilizá-lo é necessário possuir um variable group com as seguintes vari�
 * **SONAR_PROJECT_KEY**: Chave do projeto criada no Sonar Cloud.
 
 * **SONAR_PROJECT_NAME**: Nome do projeto criado no Sonar Cloud.
+
 
 Além disso é necessário definir os seguintes parâmetros ao realizar a extensão em cima do template:
 * **CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME**: Nome do Service Connection que faz a interface entre Azure e o Registry Docker alvo configurado no Azure DevOps.
