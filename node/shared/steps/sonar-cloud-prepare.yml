@@ -17,9 +17,6 @@ parameters:
 - name: SONAR_EXCLUSIONS
   type: string
   default: $(SONAR_EXCLUSIONS) # Exemplo: '**/*.spec.ts'
-- name: SONAR_INCLUSIONS
-  type: string
-  default: '$(SONAR_INCLUSIONS)'
 - name: SONAR_REPORT_PATH
   type: string
   default: $(SONAR_REPORT_PATH) # Exemplo: coverage/lcov.info
@@ -38,4 +35,3 @@ steps:
     extraProperties: |
       sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
       sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
-      sonar.inclusions=${{ parameters.SONAR_INCLUSIONS }}
