@@ -22,7 +22,7 @@ parameters:
   default: '' # Exemplo: ubuntu-20.04
 
 jobs:
-  - job: validate_unit_test_and_sonar_job
+  - job: unit_test_and_sonar_cloud_job
     displayName: "Unit Tests and SonarQube"
     pool:
       vmImage: ${{ parameters.VM_IMAGE }}
