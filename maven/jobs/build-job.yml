@@ -86,3 +86,8 @@ jobs:
       - template: ../../shared/steps/docker/docker-logout.yml
         parameters:
           CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+
+      - ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+        - template:  ../../shared/steps/generate-tag.yml
+          parameters:
+            APPLICATION_VERSION: ${{parameters.APPLICATION_VERSION}}
