@@ -33,7 +33,6 @@ steps:
   inputs:
     SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
     organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
-    scannerMode: Other
     scannerMode: 'CLI'
     configMode: 'manual'
     cliSources: '.'
