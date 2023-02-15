@@ -16,11 +16,70 @@ Um exemplo de utilização pode ser visto neste [link](https://github.com/Gladso
 
 ### Pré requisitos
 * Possui o plugin do Jacoco configurado na aplicação.
+
 * Possuir pelo menos um teste unitário implementado ou vazio. ( Caso queira ter as informações de Code Coverage no Sonar e Azure. )
+
+* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o Docker Registry e o Azure DevOps.
+
+* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o Sonar Cloud e o Azure DevOps.
+
+* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o GitHub e o Azure DevOps.
+
+* Realizar o fork deste projeto de template no GitHub.
+
+* Possuir os seguintes extensões instaladas em sua organization no Azure DevOps:
+
+* * https://marketplace.visualstudio.com/items?itemName=gittools.gittools
+
+* * https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud
+
+* * https://marketplace.visualstudio.com/items?itemName=SimondeLang.sonarcloud-buildbreaker
+
 
 ### Utilização do template
 
-Para utilizar o template é necessário possuir um variable group com as seguintes variáveis cadastradas:
+Após configurar seu Azure DevOps com os pré-requisitos especificados no tópico anterior crie um arquivo chamado azure-pipeline.yml com o conteúdo deste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml).
+
+Em seguida observe o seguinte trecho de seu arquivo de pipeline:
+```
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: GladsonBruno/azure-template-pipelines
+    endpoint: GladsonBruno
+    ref: 'refs/heads/main'
+```
+
+
+Atualize o parâmetro **name** para conter o seu projeto forkeado através deste projeto base. O formato esperado é o seguinte: **GitHub_Username/repository-name**. Exemplo: **GladsonBruno/azure-template-pipelines**.
+
+Em seguida atualize o parâmetro **endpoint** para conter o nome de seu Service Connection que realiza a interface entre o Azure DevOps e o GitHub.
+
+
+Além disso é necessário definir os seguintes parâmetros ao realizar a extensão em cima do template:
+* **CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME**: Nome do Service Connection que faz a interface entre Azure e o Registry Docker alvo configurado no Azure DevOps.
+
+* **DOCKER_REGISTRY**: Informações referente ao Registry para correto tageamento da imagem Docker.
+
+* **SONAR_CLOUD_SERVICE_CONNECTION_NAME**: Nome do Service Connection que faz a interface entre Azure e o Sonar Cloud alvo configurado no Azure DevOps.
+
+* **SONAR_CLOUD_ORGANIZATION**: Nome de sua organization dentro do SonarCloud.
+
+Exemplo de uso de parâmetros em uma pipeline extendida de um template:
+```
+extends:
+  template: /maven/azure-pipeline.yml@templates
+  parameters:
+    CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: MyContainerRegistryServiceConnection
+    DOCKER_REGISTRY: MyRegistry
+    SONAR_CLOUD_SERVICE_CONNECTION_NAME: MySonarClodServiceConnection
+    SONAR_CLOUD_ORGANIZATION: MySonarCloudOrganization
+```
+
+
+Após isso crie um variable group no Azure DevOps contendo as seguinte variáveis:
+
 * **IMAGE_NAME**: Nome que será atribuído ao seu container Docker.
 
 * **JACOCO_REPORT_PATH** Pasta no qual o report de code coverage do Jacoco será gerado. Por padrão o valor desta variável é: **/jacoco.xml
@@ -35,18 +94,28 @@ Para utilizar o template é necessário possuir um variable group com as seguint
 
 * **SONAR_PROJECT_NAME**: Nome do projeto criado no Sonar Cloud.
 
+Com o variable group criado insira o nome dele na pipeline substituindo o variable group **springboot-ci-example**.
 
-Além disso é necessário definir os seguintes parâmetros ao realizar a extensão em cima do template:
-* **CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME**: Nome do Service Connection que faz a interface entre Azure e o Registry Docker alvo configurado no Azure DevOps.
+Exemplo do arquivo de pipeline após finalizar a configuração:
 
-* **DOCKER_REGISTRY**: Informações referente ao Registry para correto tageamento da imagem Docker.
-
-* **SONAR_CLOUD_SERVICE_CONNECTION_NAME**: Nome do Service Connection que faz a interface entre Azure e o Sonar Cloud alvo configurado no Azure DevOps.
-
-* **SONAR_CLOUD_ORGANIZATION**: Nome de sua organization dentro do SonarCloud.
-
-Exemplo de uso de parâmetros em uma pipeline extendida de um template:
 ```
+trigger:
+  branches:
+    include:
+      - master
+      - develop
+
+variables:
+  - group: springboot-ci-example
+
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: GitUsername/azure-template-pipelines
+    endpoint: GitHubServiceConnection
+    ref: 'refs/heads/main'
+
 extends:
   template: /maven/azure-pipeline.yml@templates
   parameters:
