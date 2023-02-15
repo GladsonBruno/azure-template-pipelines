@@ -51,11 +51,6 @@ jobs:
           APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
           PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
 
-      - template: ../shared/steps/sonar-cloud-prepare.yml
-        parameters:
-          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
-          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
-
       - ${{ if eq(parameters['IS_USING_YARN'], 'True') }}: 
         - template: ../shared/steps/yarn/yarn-install.yml
 
@@ -69,6 +64,17 @@ jobs:
       - template: ../../shared/steps/publish-cobertura-coverage-results.yml
         parameters:
           COVERAGE_REPORT_PATH: ${{ parameters.COVERAGE_REPORT_PATH }}
+
+      - template: ../shared/steps/sonar-cloud-prepare.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+
+      - ${{ if eq(parameters['IS_USING_YARN'], 'True') }}: 
+        - template: ../shared/steps/yarn/yarn-test-sonar.yaml
+
+      - ${{ else }}:
+        - template: ../shared/steps/npm-run-test-sonar.yaml
 
       - template: ../../shared/steps/sonar/sonar-analyze.yml
 
