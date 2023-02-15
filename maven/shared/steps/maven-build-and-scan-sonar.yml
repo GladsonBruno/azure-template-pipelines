@@ -1,0 +1,10 @@
+steps:
+  - task: Maven@3
+    displayName: "[SonarCloud] Build and Analyze"
+    inputs:
+      publishJUnitResults: false
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      sonarQubeRunAnalysis: true
+      isJacocoCoverageReportXML: true
+      goals: 'package'

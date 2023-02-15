@@ -1,0 +1,11 @@
+steps:
+  - task: gitversion/execute@0
+    displayName: '[GitVersion] Determine GitVersion'
+
+  - script: |
+      echo 'Exporting VERSION variable to another stages'
+      VERSION_VALUE=$(GitVersion.SemVer)
+      echo "The current version is $VERSION_VALUE"
+      echo "##vso[task.setvariable variable=VERSION;isOutput=true]$VERSION_VALUE";
+    name: gitversion
+    displayName: "[GitVersion] Export GitVersion"

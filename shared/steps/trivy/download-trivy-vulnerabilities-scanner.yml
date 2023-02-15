@@ -1,0 +1,14 @@
+parameters:
+- name: TRIVY_VERSION
+  type: string
+  default: '0.37.0'
+
+steps:
+  - script: |
+      mkdir trivy_scanner
+      wget https://github.com/aquasecurity/trivy/releases/download/v${{ parameters.TRIVY_VERSION }}/trivy_${{ parameters.TRIVY_VERSION }}_Linux-64bit.tar.gz
+      tar -xf trivy_${{ parameters.TRIVY_VERSION }}_Linux-64bit.tar.gz
+      mv trivy trivy_scanner
+      chmod a+x trivy_scanner/trivy
+    displayName: 'Download Trivy'
+    workingDirectory: $(Agent.TempDirectory)

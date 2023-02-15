@@ -1,0 +1,62 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: EXECUTE_GITVERSION
+  type: boolean
+  default: true
+- name: JDK_USED_VERSION
+  type: string
+  default: $(JAVA_JDK_VERSION)
+- name: POM_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/pom.xml
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: VM_IMAGE
+  type: string
+  default: '' # Exemplo: ubuntu-20.04
+
+jobs:
+  - job: unit_test_and_sonar_cloud_job
+    displayName: "Unit Tests and SonarQube"
+    pool:
+      vmImage: ${{ parameters.VM_IMAGE }}
+      demands:
+        - java
+    steps:
+      - template: ../../shared/steps/checkout-repository.yml
+
+      - template: ../shared/steps/use-specific-java-version.yml
+        parameters:
+          JDK_USED_VERSION: ${{parameters.JDK_USED_VERSION}}
+
+      - ${{ if or(eq(parameters['EXECUTE_GITVERSION'], 'True'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ../../shared/steps/gitversion/setup-gitversion.yml
+
+        - template: ../../shared/steps/gitversion/execute-gitversion.yml
+
+      - template: ../shared/steps/update-project-version.yml
+        parameters:
+          APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
+          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
+
+      - template: ../shared/steps/sonar-cloud-prepare.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+
+      - template: ../shared/steps/maven-test.yml
+
+      - template: ../shared/steps/maven-build-and-scan-sonar.yml
+
+      - template: ../../shared/steps/sonar/sonar-cloud-publish.yml
+
+      - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}

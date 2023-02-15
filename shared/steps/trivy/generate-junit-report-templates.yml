@@ -1,0 +1,32 @@
+# Templates criados usando o formato de Go Template e JUnit XML.
+# Referências:
+# https://www.practical-go-lessons.com/chap-32-templates
+# https://www.checkov.io/8.Outputs/JUnit%20XML.html
+
+parameters:
+- name: IMAGE_VULNERABILITIES_REPORT_TEMPLATE_PATH
+  type: string
+  default: 'templates\junit-container-vulnerabilities-template.tpl'
+
+steps:
+  - powershell: |
+      New-Item -Path ${{ parameters.IMAGE_VULNERABILITIES_REPORT_TEMPLATE_PATH }} -ItemType File -Force
+      Set-Content ${{ parameters.IMAGE_VULNERABILITIES_REPORT_TEMPLATE_PATH }} '<?xml version="1.0" ?>
+              <testsuites>
+              {{- range . -}}
+              {{- $failures := len .Vulnerabilities }}
+                  <testsuite tests="1" failures="{{ $failures }}" time="" name="{{  .Target }}">
+                  {{- if not (eq .Type "") }}
+                      <properties>
+                          <property name="type" value="{{ .Type }}"></property>
+                      </properties>
+                      {{- end -}}
+                      {{ range .Vulnerabilities }}
+                      <testcase classname="{{ .PkgName }}-{{ .InstalledVersion }}" name="[{{ .Vulnerability.Severity }}] {{ .VulnerabilityID }}" time="">
+                          <failure message={{escapeXML .Title | printf "%q" }} type="description">Vulnerability ID: {{escapeXML .VulnerabilityID | printf "%q" }}. &#xA;Package Name: {{escapeXML .PkgName | printf "%q" }}. &#xA;Version: {{escapeXML .InstalledVersion | printf "%q" }}. &#xA;Description: {{escapeXML .Description | printf "%q" }}. &#xA;Reference: {{escapeXML .PrimaryURL | printf "%q" }}. &#xA;</failure>
+                      </testcase>
+                  {{- end }}
+                  </testsuite>
+              {{- end }}
+              </testsuites>'
+    displayName: '[Trivy] Generating Container Vulnerabilities Junit Template'

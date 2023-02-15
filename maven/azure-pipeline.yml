@@ -1,0 +1,99 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: 'DockerHub'
+- name: DOCKER_REGISTRY
+  type: string
+  default: 'gladsonbruno'
+- name: DOCKER_BUILD_ARGS
+  type: string
+  default: '' #Exemplo: --build-arg FIRST_ARG=FIRST_ARG_VALUE --build-arg SECOND_ARG=SECOND_ARG_VALUE
+- name: DOCKER_BUILD_CONTEXT_FOLDER
+  type: string
+  default: '$(Build.SourcesDirectory)'
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: '$(IMAGE_NAME)'
+- name: DOCKERFILE_PATH
+  type: string
+  default: '$(Build.SourcesDirectory)/Dockerfile'
+- name: JDK_USED_VERSION
+  type: string
+  default: $(JAVA_JDK_VERSION)
+- name: POM_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/pom.xml
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: 'portifoliogladson'
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: 'SonarCloud'
+- name: VM_IMAGE
+  type: string
+  default: 'ubuntu-20.04'
+
+stages:
+  - stage: validations_stage
+    displayName: "Validations"
+    condition: | 
+      or(
+        eq(variables['Build.Reason'], 'PullRequest'),
+        and(
+          ne(variables['Build.Reason'], 'PullRequest'),
+          or(
+            eq(variables['Build.SourceBranchName'], 'master'),
+            eq(variables['Build.SourceBranchName'], 'develop')
+          )
+        )
+      )
+    variables:
+      APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
+    jobs: 
+      - template: ./jobs/validations-job.yml
+        parameters:
+          APPLICATION_VERSION: $(APPLICATION_VERSION)
+          EXECUTE_GITVERSION: true
+          JDK_USED_VERSION: ${{ parameters.JDK_USED_VERSION }}
+          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+          VM_IMAGE: ${{ parameters.VM_IMAGE }}
+
+  - stage: build_stage
+    displayName: "Build"
+    dependsOn: [ "validations_stage" ]
+    condition: or(
+      eq(variables['Build.SourceBranchName'], 'master'),
+      eq(variables['Build.SourceBranchName'], 'develop'),
+      contains(variables['Build.SourceBranch'], 'refs/heads/release/'),
+      contains(variables['Build.SourceBranch'], 'refs/heads/hotfix/')
+      )
+    variables:
+      APPLICATION_VERSION: $[ stageDependencies.validations_stage.unit_test_and_sonar_cloud_job.outputs['gitversion.VERSION'] ]
+    jobs: 
+      - template: ./jobs/build-job.yml
+        parameters:
+          APPLICATION_VERSION: $(APPLICATION_VERSION)
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+          DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
+          DOCKER_BUILD_ARGS: ${{ parameters.DOCKER_BUILD_ARGS }}
+          DOCKER_BUILD_CONTEXT_FOLDER: ${{ parameters.DOCKER_BUILD_CONTEXT_FOLDER }}
+          DOCKERFILE_PATH: ${{ parameters.DOCKERFILE_PATH }}
+          DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
+          EXECUTE_GITVERSION: false
+          JDK_USED_VERSION: ${{ parameters.JDK_USED_VERSION }}
+          POM_FILE_LOCATION: ${{ parameters.POM_FILE_LOCATION }}
+          VM_IMAGE: ${{ parameters.VM_IMAGE }}
+
+      - template: ../shared/jobs/trivy/check-container-vulnerabilities.yml
+        parameters:
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+          DEPENDS_ON: [ build_job ]
+          DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
+          DOCKER_IMAGE_TAG: $(APPLICATION_VERSION)
+          DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
+          VM_IMAGE: ${{ parameters.VM_IMAGE }}

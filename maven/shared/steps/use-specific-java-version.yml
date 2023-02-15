@@ -1,0 +1,12 @@
+parameters:
+- name: JDK_USED_VERSION
+  type: string
+  default: $(JAVA_JDK_VERSION)
+
+steps:
+- task: JavaToolInstaller@0
+  displayName: "[Setup] Use JDK ${{parameters.JDK_USED_VERSION}}"
+  inputs:
+    versionSpec: ${{ parameters.JDK_USED_VERSION }}
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'

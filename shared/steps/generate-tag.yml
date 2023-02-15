@@ -1,0 +1,11 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+
+steps:
+  - task: git-tag-on-release-task@9
+    displayName: "Generate TAG ${{parameters.APPLICATION_VERSION}} on branch $(Build.SourceBranchName)"
+    inputs:
+      staticTagName: ${{parameters.APPLICATION_VERSION}}
+    condition: succeeded()

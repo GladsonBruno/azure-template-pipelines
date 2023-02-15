@@ -1,0 +1,22 @@
+parameters:
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_TAG
+  type: string
+  default: $(GitVersion.SemVer)
+- name: DOCKER_REGISTRY
+  type: string
+  default: ''
+
+steps:
+  - task: Docker@2
+    displayName: '[DockerBuild] Docker Push version ${{parameters.DOCKER_IMAGE_TAG}}'
+    inputs:
+      containerRegistry: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+      repository: '${{ parameters.DOCKER_REGISTRY }}/${{ parameters.DOCKER_IMAGE_NAME }}'
+      command: 'push'
+      tags: ${{parameters.DOCKER_IMAGE_TAG}}

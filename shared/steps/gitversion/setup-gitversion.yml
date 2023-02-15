@@ -1,0 +1,10 @@
+parameters:
+- name: GITVERSION_INSTALLATION_VERSION
+  type: string
+  default: '5.8.x'
+
+steps:
+  - task: gitversion/setup@0
+    displayName: '[GitVersion] Setup'
+    inputs:
+      versionSpec: ${{parameters.GITVERSION_INSTALLATION_VERSION}}

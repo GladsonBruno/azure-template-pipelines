@@ -1,0 +1,35 @@
+parameters:
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: DOCKER_BUILD_ARGS
+  type: string
+  default: '' #Exemplo: --build-arg FIRST_ARG=FIRST_ARG_VALUE --build-arg SECOND_ARG=SECOND_ARG_VALUE
+- name: DOCKER_BUILD_CONTEXT_FOLDER
+  type: string
+  default: '$(Build.SourcesDirectory)'
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_TAG
+  type: string
+  default: $(GitVersion.SemVer)
+- name: DOCKER_REGISTRY
+  type: string
+  default: ''
+- name: DOCKERFILE_PATH
+  type: string
+  default: '$(Build.SourcesDirectory)/Dockerfile'
+
+steps:
+  - task: Docker@2
+    displayName: '[DockerBuild] Docker Build version ${{parameters.DOCKER_IMAGE_TAG}}'
+    inputs:
+      command: build
+      containerRegistry: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+      repository: '${{ parameters.DOCKER_REGISTRY }}/${{ parameters.DOCKER_IMAGE_NAME }}'
+      buildContext: ${{ parameters.DOCKER_BUILD_CONTEXT_FOLDER }}
+      Dockerfile: ${{ parameters.DOCKERFILE_PATH }}
+      tags: ${{parameters.DOCKER_IMAGE_TAG}}
+      ${{ if ne(parameters.DOCKER_BUILD_ARGS, '') }}:
+        arguments: ${{parameters.DOCKER_BUILD_ARGS}}
