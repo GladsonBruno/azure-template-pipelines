@@ -1,4 +1,7 @@
 parameters:
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
 - name: DOCKER_BUILD_ARGS
   type: string
   default: '' #Exemplo: --build-arg FIRST_ARG=FIRST_ARG_VALUE --build-arg SECOND_ARG=SECOND_ARG_VALUE
@@ -23,7 +26,7 @@ steps:
     displayName: '[DockerBuild] Docker Build version ${{parameters.DOCKER_IMAGE_TAG}}'
     inputs:
       command: build
-      containerRegistry: $(SERVICE_CONNECTION_NAME)
+      containerRegistry: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
       repository: '${{ parameters.DOCKER_REGISTRY }}/${{ parameters.DOCKER_IMAGE_NAME }}'
       buildContext: ${{ parameters.DOCKER_BUILD_CONTEXT_FOLDER }}
       Dockerfile: ${{ parameters.DOCKERFILE_PATH }}

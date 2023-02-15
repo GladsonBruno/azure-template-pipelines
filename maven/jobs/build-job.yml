@@ -78,6 +78,7 @@ jobs:
           
       - template: ../../shared/steps/docker/docker-push.yml
         parameters:
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
           DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
           DOCKER_IMAGE_TAG: ${{ parameters.APPLICATION_VERSION }}
           DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
