@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      npm install
+    displayName: '[Restore] NPM INSTALL'

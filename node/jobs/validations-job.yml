@@ -1,0 +1,77 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: COVERAGE_REPORT_PATH
+  type: string
+  default: $(COVERAGE_REPORT_PATH)
+- name: EXECUTE_GITVERSION
+  type: boolean
+  default: true
+- name: NODE_USED_VERSION
+  type: string
+  default: $(NODEJS_VERSION)
+- name: PACKAGE_JSON_FILE_LOCATION
+  type: string
+  default: $(Build.SourcesDirectory)/package.json
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: VM_IMAGE
+  type: string
+  default: '' # Exemplo: ubuntu-20.04
+
+jobs:
+  - job: unit_test_and_sonar_cloud_job
+    displayName: "Unit Tests and SonarQube"
+    pool:
+      vmImage: ${{ parameters.VM_IMAGE }}
+      demands:
+        - java
+    steps:
+      - template: ../../shared/steps/checkout-repository.yml
+
+      - template: ../shared/steps/use-specific-node-version.yml
+        parameters:
+          NODE_USED_VERSION: ${{ parameters.NODE_USED_VERSION }}
+
+      - ${{ if or(eq(parameters['EXECUTE_GITVERSION'], 'True'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ../../shared/steps/gitversion/setup-gitversion.yml
+
+        - template: ../../shared/steps/gitversion/execute-gitversion.yml
+
+      - template: ../shared/steps/update-project-version.yml
+        parameters:
+          APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
+          PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
+
+      - template: ../shared/steps/sonar-cloud-prepare.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+
+      - ${{ if eq(parameters['IS_USING_YARN'], 'True') }}: 
+        - template: ../shared/steps/yarn/yarn-install.yml
+
+        - template: ../shared/steps/yarn/yarn-test.yml
+
+      - ${{ else }}:
+        - template: ../shared/steps/npm-install.yml
+
+        - template: ../shared/steps/npm-run-test.yml
+
+      - template: ../../shared/steps/publish-cobertura-coverage-results.yaml
+        parameters:
+          COVERAGE_REPORT_PATH: ${{ parameters.COVERAGE_REPORT_PATH }}
+
+      - template: ../../shared/steps/sonar/sonar-analyze.yml
+
+      - template: ../../shared/steps/sonar/sonar-cloud-publish.yml
+
+      - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}

@@ -1,0 +1,11 @@
+parameters:
+- name: NODE_USED_VERSION
+  type: string
+  default: $(NODEJS_VERSION)
+
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: ${{ parameters.NODE_USED_VERSION }}
+    displayName: "[Setup] Use Node ${{parameters.NODE_USED_VERSION}}"

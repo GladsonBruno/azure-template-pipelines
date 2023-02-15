@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      yarn test:sonar
+    displayName: '[Test] YARN TEST:SONAR'

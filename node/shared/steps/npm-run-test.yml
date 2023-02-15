@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      npm run test
+    displayName: '[Test] NPM RUN TEST'

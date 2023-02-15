@@ -1,0 +1,41 @@
+parameters:
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: SONAR_PROJECT_KEY
+  type: string
+  default: $(SONAR_PROJECT_KEY)
+- name: SONAR_PROJECT_NAME
+  type: string
+  default: $(SONAR_PROJECT_NAME)
+- name: SONAR_PATH_SOURCES
+  type: string
+  default: $(SONAR_PATH_SOURCES) # Exemplo:'src'
+- name: SONAR_EXCLUSIONS
+  type: string
+  default: $(SONAR_EXCLUSIONS) # Exemplo: '**/*.spec.ts'
+- name: SONAR_INCLUSIONS
+  type: string
+  default: '$(SONAR_INCLUSIONS)'
+- name: SONAR_REPORT_PATH
+  type: string
+  default: $(SONAR_REPORT_PATH) # Exemplo: coverage/lcov.info
+
+steps:
+- task: SonarCloudPrepare@1
+  displayName: 'Prepare analysis configuration'
+  inputs:
+    SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+    organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '${{parameters.SONAR_PROJECT_KEY}}'
+    cliProjectName: '${{parameters.SONAR_PROJECT_NAME}}'
+    cliSources: '${{parameters.SONAR_PATH_SOURCES}}'
+    extraProperties: |
+      sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
+      sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
+      sonar.inclusions=${{ parameters.SONAR_INCLUSIONS }}
