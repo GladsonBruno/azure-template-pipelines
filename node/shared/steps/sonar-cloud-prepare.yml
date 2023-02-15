@@ -34,6 +34,9 @@ steps:
     SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
     organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
     scannerMode: Other
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliSources: '.'
     extraProperties: |
       sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
       sonar.inclusions=${{ parameters.SONAR_INCLUSIONS }}
