@@ -20,6 +20,9 @@ parameters:
 - name: DOCKERFILE_PATH
   type: string
   default: '$(Build.SourcesDirectory)/Dockerfile'
+- name: IS_USING_YARN
+  type: boolean
+  default: true
 - name: NODE_USED_VERSION
   type: string
   default: $(NODEJS_VERSION)
