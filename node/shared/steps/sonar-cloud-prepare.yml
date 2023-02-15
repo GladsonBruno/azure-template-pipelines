@@ -45,3 +45,4 @@ steps:
       sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
       sonar.language=${{parameters.SONAR_LANGUAGE}}
       sonar.dynamicAnalysis=reuseReports
+      sonar.scm.disabled=true
