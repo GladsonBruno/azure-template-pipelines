@@ -62,10 +62,6 @@ jobs:
 
       - template: ../shared/steps/maven-package.yml
 
-      - template: ../../shared/steps/docker/docker-login.yml
-        parameters:
-          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
-
       - template: ../../shared/steps/docker/docker-build.yml
         parameters:
           CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
@@ -82,10 +78,6 @@ jobs:
           DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
           DOCKER_IMAGE_TAG: ${{ parameters.APPLICATION_VERSION }}
           DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
-
-      - template: ../../shared/steps/docker/docker-logout.yml
-        parameters:
-          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
 
       - ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
         - template:  ../../shared/steps/generate-tag.yml
