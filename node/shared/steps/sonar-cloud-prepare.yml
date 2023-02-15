@@ -34,5 +34,5 @@ steps:
     extraProperties: |
       sonar.javascript.lcov.reportPaths=${{parameters.SONAR_REPORT_PATH}}
       sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
-      sonar.sources=${{parameters.${{parameters.SONAR_PATH_SOURCES}}}}
+      sonar.sources=${{parameters.${{parameters.SONAR_PATH_SOURCES}}
       sonar.dynamicAnalysis=reuseReports
