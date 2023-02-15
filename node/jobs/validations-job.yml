@@ -71,10 +71,10 @@ jobs:
           SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
 
       - ${{ if eq(parameters['IS_USING_YARN'], 'True') }}: 
-        - template: ../shared/steps/yarn/yarn-test-sonar.yaml
+        - template: ../shared/steps/yarn/yarn-test-sonar.yml
 
       - ${{ else }}:
-        - template: ../shared/steps/npm-run-test-sonar.yaml
+        - template: ../shared/steps/npm-run-test-sonar.yml
 
       - template: ../../shared/steps/sonar/sonar-analyze.yml
 
