@@ -35,6 +35,8 @@ Um exemplo de utilização pode ser visto neste [link](https://github.com/Gladso
 
 * * https://marketplace.visualstudio.com/items?itemName=SimondeLang.sonarcloud-buildbreaker
 
+* * https://marketplace.visualstudio.com/items?itemName=jabbera.git-tag-on-release-task
+
 
 ### Utilização do template
 
