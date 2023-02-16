@@ -1,4 +1,4 @@
-## Manual template Node
+## Manual template Python
 O template Python cobre os seguintes pontos:
 
 * Versionamento automático
