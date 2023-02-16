@@ -42,7 +42,7 @@ jobs:
   - job: build_job
     displayName: "Build"
     pool:
-      vmImage: ubuntu-20.04
+      vmImage: ${{ parameters.VM_IMAGE }}
       demands:
         - java
     steps:
