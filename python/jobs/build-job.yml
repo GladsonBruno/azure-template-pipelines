@@ -25,18 +25,10 @@ parameters:
   default: '$(Build.SourcesDirectory)/Dockerfile'
 - name: EXECUTE_GITVERSION
   type: boolean
-  default: true
-- name: NODE_USED_VERSION
-  type: string
-  default: $(NODEJS_VERSION)
-- name: PACKAGE_JSON_FILE_LOCATION
-  type: string
-  default: $(Build.SourcesDirectory)/package.json
+  default: false
 - name: VM_IMAGE
   type: string
   default: '' # Exemplo: ubuntu-20.04
-
-
 
 jobs:
   - job: build_job
@@ -48,19 +40,10 @@ jobs:
     steps:
       - template: ../../shared/steps/checkout-repository.yml
 
-      - template: ../shared/steps/use-specific-node-version.yml
-        parameters:
-          NODE_USED_VERSION: ${{ parameters.NODE_USED_VERSION }}
-
       - ${{ if eq(parameters['EXECUTE_GITVERSION'], 'True') }}:
         - template: ../../shared/steps/gitversion/setup-gitversion.yml
 
         - template: ../../shared/steps/gitversion/execute-gitversion.yml
-
-      - template: ../shared/steps/update-project-version.yml
-        parameters:
-          APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
-          PACKAGE_JSON_FILE_LOCATION: ${{ parameters.PACKAGE_JSON_FILE_LOCATION }}
 
       - template: ../../shared/steps/docker/docker-build.yml
         parameters:

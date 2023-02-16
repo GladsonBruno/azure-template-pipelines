@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      which python
+    displayName: '[Setup] Virtualenv Activate'

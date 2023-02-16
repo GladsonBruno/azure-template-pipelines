@@ -1,0 +1,58 @@
+parameters:
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: SONAR_PROJECT_KEY
+  type: string
+  default: $(SONAR_PROJECT_KEY)
+- name: SONAR_PROJECT_NAME
+  type: string
+  default: $(SONAR_PROJECT_NAME)
+- name: SONAR_PATH_SOURCES
+  type: string
+  default: $(SONAR_PATH_SOURCES)
+- name: SONAR_COVERAGE_REPORT_PATH
+  type: string
+  default: '$(SONAR_COVERAGE_REPORT_PATH)'
+- name: SONAR_XUNIT_REPORT_PATH
+  type: string
+  default: '$(SONAR_XUNIT_REPORT_PATH)'
+- name: SONAR_EXCLUSIONS
+  type: string
+  default: '$(SONAR_EXCLUSIONS)'
+- name: SONAR_INCLUSIONS
+  type: string
+  default: $(SONAR_INCLUSIONS) # Exemplo: '**/*.py'
+- name: SONAR_TEST_PATH
+  type: string
+  default: $(TEST_PATH)
+- name: SONAR_PYTHON_VERSION
+  type: string
+  default: '$(PYTHON_VERSION)'
+
+
+steps:
+  - task: SonarCloudPrepare@1
+    displayName: '[SonarCloud] Prepare'
+    inputs:
+      SonarCloud: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+      organization: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: '${{parameters.SONAR_PROJECT_KEY}}'
+      cliProjectName: '${{parameters.SONAR_PROJECT_NAME}}'
+      cliSources: '.'
+      extraProperties: |
+        sonar.python.coverage.reportPaths=${{parameters.SONAR_COVERAGE_REPORT_PATH}}
+        sonar.python.xunit.reportPath=${{parameters.SONAR_XUNIT_REPORT_PATH}}
+        sonar.inclusions=${{ parameters.SONAR_INCLUSIONS }}
+        sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
+        sonar.python.version=${{parameters.SONAR_PYTHON_VERSION}}
+        sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
+        sonar.test=${{parameters.SONAR_TEST_PATH}}
+        sonar.dynamicAnalysis=reuseReports
+        sonar.scm.disabled=true
+        sonar.language=python

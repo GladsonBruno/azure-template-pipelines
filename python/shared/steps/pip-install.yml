@@ -1,0 +1,9 @@
+parameters:
+- name: REQUIREMENTS_TXT_PATH
+  type: string
+  default: '$(Build.SourcesDirectory)/requirements.txt'
+
+steps:
+  - script: |
+      pip install -r ${{ parameters.REQUIREMENTS_TXT_PATH }}
+    displayName: '[Restore] PIP INSTALL'

@@ -1,0 +1,4 @@
+steps:
+  - script: |
+      python -m pip install --user virtualenv
+    displayName: '[Setup] Virtualenv Install'

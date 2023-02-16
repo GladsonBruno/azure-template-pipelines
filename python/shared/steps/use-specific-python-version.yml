@@ -1,0 +1,10 @@
+parameters:
+- name: PYTHON_VERSION
+  type: string
+  default: '$(PYTHON_VERSION).x'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "${{ parameters.PYTHON_VERSION }}"
+    displayName: "[Setup] Use Python ${{parameters.PYTHON_VERSION}}"
