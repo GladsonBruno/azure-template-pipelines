@@ -35,6 +35,9 @@ parameters:
 - name: SONAR_COVERAGE_REPORT_PATH
   type: string
   default: '$(SONAR_COVERAGE_REPORT_PATH)'
+- name: SONAR_JUNIT_REPORT_PATH
+  type: string
+  default: '$(SONAR_JUNIT_REPORT_PATH)'
 - name: SONAR_XUNIT_REPORT_PATH
   type: string
   default: '$(SONAR_XUNIT_REPORT_PATH)'
@@ -87,6 +90,7 @@ jobs:
           SONAR_PROJECT_NAME: ${{ parameters.SONAR_PROJECT_NAME }}
           SONAR_PATH_SOURCES: ${{ parameters.SONAR_PATH_SOURCES }}
           SONAR_COVERAGE_REPORT_PATH: ${{ parameters.SONAR_COVERAGE_REPORT_PATH }}
+          SONAR_JUNIT_REPORT_PATH: ${{ parameters.SONAR_JUNIT_REPORT_PATH }}
           SONAR_XUNIT_REPORT_PATH: ${{ parameters.SONAR_XUNIT_REPORT_PATH }}
           SONAR_EXCLUSIONS: ${{ parameters.SONAR_EXCLUSIONS }}
 

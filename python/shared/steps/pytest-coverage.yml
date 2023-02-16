@@ -2,6 +2,9 @@ parameters:
 - name: COVERAGERC_PATH
   type: string
   default: '$(COVERAGERC_PATH)' # Exemplo: $(Build.SourcesDirectory)/.coveragerc
+- name: SONAR_JUNIT_REPORT_PATH
+  type: string
+  default: '$(SONAR_JUNIT_REPORT_PATH)'
 - name: SONAR_XUNIT_REPORT_PATH
   type: string
   default: '$(SONAR_XUNIT_REPORT_PATH)'
@@ -11,5 +14,5 @@ parameters:
 
 steps:
   - script: |
-      pytest --cov=. --cov-report=xml --cov-report=html --cov-config=${{ parameters.COVERAGERC_PATH }} --nunitxml=reports/nunit/test-output.xml --junitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} ${{ parameters.TEST_PATH }}
+      pytest --cov=. --cov-report=xml --cov-report=html --cov-config=${{ parameters.COVERAGERC_PATH }} --nunitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} --junitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} ${{ parameters.TEST_PATH }}
     displayName: '[Test] Execute Unit Tests'
