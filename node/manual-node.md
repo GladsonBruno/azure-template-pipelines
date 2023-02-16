@@ -87,7 +87,7 @@ Caso os 2 comandos estejam sendo executados com sucesso é sinal que sua aplica�
 
 ## Utilização do template
 
-Após configurar seu projeto com os pré-requisitos especificados no tópico anterior crie um arquivo chamado azure-pipeline.yml com o conteúdo deste [link](https://github.com/GladsonBruno/Node-AzureDevOps-CI-Example).
+Após configurar seu projeto com os pré-requisitos especificados no tópico anterior crie um arquivo chamado **azure-pipeline.yml** com o conteúdo deste [link](https://github.com/GladsonBruno/Node-AzureDevOps-CI-Example).
 
 Em seguida observe o seguinte trecho de seu arquivo de pipeline:
 ```

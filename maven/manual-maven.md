@@ -72,7 +72,7 @@ Caso queira conferir um exemplo real desta configuração acesse este [link](htt
 
 ## Utilização do template
 
-Após configurar seu projeto com os pré-requisitos especificados no tópico anterior crie um arquivo chamado azure-pipeline.yml com o conteúdo deste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml).
+Após configurar seu projeto com os pré-requisitos especificados no tópico anterior crie um arquivo chamado **azure-pipeline.yml** com o conteúdo deste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml).
 
 Em seguida observe o seguinte trecho de seu arquivo de pipeline:
 ```
