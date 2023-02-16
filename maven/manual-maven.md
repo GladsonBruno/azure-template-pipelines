@@ -14,33 +14,65 @@ O template Maven cobre os seguintes pontos:
 
 Um exemplo de utilização pode ser visto neste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml)
 
-### Pré requisitos
+## Pré requisitos
+* Possuir o Azure DevOps devidamente configurado conforme recomendado neste [manual](../README.md).
+
 * Possui o plugin do Jacoco configurado na aplicação.
+
+* Possuir o plugin Sonar Maven Plugin configurado na aplicação.
 
 * Possuir pelo menos um teste unitário implementado ou vazio. ( Caso queira ter as informações de Code Coverage no Sonar e Azure. )
 
-* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o Docker Registry e o Azure DevOps.
+## Configuração do plugins do Maven esperados pelo CI
+Exemplo de configuração do **pom.xml** da aplicação:
+```
+.
+.
+.
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin> <!-- Plugin do SonarQube -->
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.6.0.1398</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- attached to Maven test phase -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+.
+.
+.
+```
 
-* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o Sonar Cloud e o Azure DevOps.
+Caso queira conferir um exemplo real desta configuração acesse este [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/pom.xml).
 
-* Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o GitHub e o Azure DevOps.
+## Utilização do template
 
-* Realizar o fork deste projeto de template no GitHub.
-
-* Possuir os seguintes extensões instaladas em sua organization no Azure DevOps:
-
-  * [GitTools](https://marketplace.visualstudio.com/items?itemName=gittools.gittools)
-
-  * [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud)
-
-  * [SonarCloud build breaker](https://marketplace.visualstudio.com/items?itemName=SimondeLang.sonarcloud-buildbreaker)
-
-  * [Tag\Branch Git on Release](https://marketplace.visualstudio.com/items?itemName=jabbera.git-tag-on-release-task)
-
-
-### Utilização do template
-
-Após configurar seu Azure DevOps com os pré-requisitos especificados no tópico anterior crie um arquivo chamado azure-pipeline.yml com o conteúdo deste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml).
+Após configurar seu projeto com os pré-requisitos especificados no tópico anterior crie um arquivo chamado azure-pipeline.yml com o conteúdo deste [link](https://github.com/GladsonBruno/SpringBoot-AzureDevOps-CI-Example/blob/master/azure-pipeline.yml).
 
 Em seguida observe o seguinte trecho de seu arquivo de pipeline:
 ```
@@ -84,13 +116,13 @@ Após isso crie um variable group no Azure DevOps contendo as seguinte variávei
 
 * **IMAGE_NAME**: Nome que será atribuído ao seu container Docker.
 
-* **JACOCO_REPORT_PATH** Pasta no qual o report de code coverage do Jacoco será gerado. Por padrão o valor desta variável é: **/jacoco.xml
+* **JACOCO_REPORT_PATH** Pasta no qual o report de code coverage do Jacoco será gerado. Por padrão o valor desta variável é: **\*\*/jacoco.xml**
 
-* **JAVA_JDK_VERSION**: Informa a pipeline a versão do JDK utilizado pela aplicação. Exemplo: 11, 17.
+* **JAVA_JDK_VERSION**: Informa a pipeline a versão do JDK utilizado pela aplicação. Exemplo: **11**, **17**.
 
-* **SONAR_EXCLUSIONS**: Informa ao Sonar Cloud quais diretórios e arquivos serão excluídos da análise de qualidade. O valor que uso normalmente é: src/test/*.java,src/main/resources/application.properties
+* **SONAR_EXCLUSIONS**: Informa ao Sonar Cloud quais diretórios e arquivos serão excluídos da análise de qualidade. O valor que uso normalmente é: **src/test/*.java,src/main/resources/application.properties**
 
-* **SONAR_INCLUSIONS**: Informa ao Sonar Cloud quais diretórios e arquivos serão incluídos da análise de qualidade. O valor que uso normalmente é: **/*.java
+* **SONAR_INCLUSIONS**: Informa ao Sonar Cloud quais diretórios e arquivos serão incluídos da análise de qualidade. O valor que uso normalmente é: **\*\*/\*.java**
 
 * **SONAR_PROJECT_KEY**: Chave do projeto criada no Sonar Cloud.
 
