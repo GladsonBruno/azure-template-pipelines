@@ -1,0 +1,109 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: COVERAGERC_PATH
+  type: string
+  default: '$(COVERAGERC_PATH)' # Exemplo: $(Build.SourcesDirectory)/.coveragerc
+- name: COVERAGE_REPORT_PATH
+  type: string
+  default: $(COVERAGE_REPORT_PATH)
+- name: EXECUTE_GITVERSION
+  type: boolean
+  default: true
+- name: PYTHON_VERSION
+  type: string
+  default: '$(PYTHON_VERSION).x'
+- name: REQUIREMENTS_TXT_PATH
+  type: string
+  default: '$(REQUIREMENTS_TXT_PATH)'
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: ''
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: SONAR_PROJECT_KEY
+  type: string
+  default: $(SONAR_PROJECT_KEY)
+- name: SONAR_PROJECT_NAME
+  type: string
+  default: $(SONAR_PROJECT_NAME)
+- name: SONAR_PATH_SOURCES
+  type: string
+  default: $(SONAR_PATH_SOURCES)
+- name: SONAR_COVERAGE_REPORT_PATH
+  type: string
+  default: '$(SONAR_COVERAGE_REPORT_PATH)'
+- name: SONAR_XUNIT_REPORT_PATH
+  type: string
+  default: '$(SONAR_XUNIT_REPORT_PATH)'
+- name: SONAR_EXCLUSIONS
+  type: string
+  default: '$(SONAR_EXCLUSIONS)'
+- name: TEST_PATH
+  type: string
+  default: '$(TEST_PATH)'
+- name: VM_IMAGE
+  type: string
+  default: ''
+
+jobs:
+  - job: unit_test_and_sonar_cloud_job
+    displayName: "Unit Tests and SonarQube"
+    pool:
+      vmImage: ${{ parameters.VM_IMAGE }}
+      demands:
+        - java
+    steps:
+      - template: ../../shared/steps/checkout-repository.yml
+
+      - template: ../shared/steps/use-specific-python-version.yml
+        parameters:
+          PYTHON_VERSION: ${{parameters.PYTHON_VERSION}}
+
+      - ${{ if or(eq(parameters['EXECUTE_GITVERSION'], 'True'), eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ../../shared/steps/gitversion/setup-gitversion.yml
+
+        - template: ../../shared/steps/gitversion/execute-gitversion.yml
+
+      - template: ../shared/steps/pip-install-upgrade-pip.yml
+
+      - template: ../shared/steps/virtual-env-install.yml
+
+      - template: ../shared/steps/virtual-env-create.yml
+
+      - template: ../shared/steps/virtual-env-activate.yml
+
+      - template: ../shared/steps/pip-install.yml
+        parameters:
+          REQUIREMENTS_TXT_PATH: ${{ parameters.REQUIREMENTS_TXT_PATH }}
+
+      - template: ../shared/steps/sonar-cloud-prepare.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+          SONAR_PROJECT_KEY: ${{ parameters.SONAR_PROJECT_KEY }}
+          SONAR_PROJECT_NAME: ${{ parameters.SONAR_PROJECT_NAME }}
+          SONAR_PATH_SOURCES: ${{ parameters.SONAR_PATH_SOURCES }}
+          SONAR_COVERAGE_REPORT_PATH: ${{ parameters.SONAR_COVERAGE_REPORT_PATH }}
+          SONAR_XUNIT_REPORT_PATH: ${{ parameters.SONAR_XUNIT_REPORT_PATH }}
+          SONAR_EXCLUSIONS: ${{ parameters.SONAR_EXCLUSIONS }}
+
+      - template: ../shared/steps/pytest-coverage.yml
+        parameters:
+          COVERAGERC_PATH: ${{ parameters.COVERAGERC_PATH }}
+          TEST_PATH: ${{ parameters.TEST_PATH }}
+
+      - template: ../../shared/steps/publish-cobertura-coverage-results.yml
+        parameters:
+          COVERAGE_REPORT_PATH: ${{ parameters.COVERAGE_REPORT_PATH }}
+
+      - template: ../../shared/steps/sonar/sonar-analyze.yml
+
+      - template: ../../shared/steps/sonar/sonar-publish.yml
+
+      - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
+        parameters:
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}

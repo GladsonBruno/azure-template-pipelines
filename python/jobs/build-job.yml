@@ -1,0 +1,64 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME
+  type: string
+  default: ''
+- name: DOCKER_BUILD_ARGS
+  type: string
+  default: '' #Exemplo: --build-arg FIRST_ARG=FIRST_ARG_VALUE --build-arg SECOND_ARG=SECOND_ARG_VALUE
+- name: DOCKER_BUILD_CONTEXT_FOLDER
+  type: string
+  default: '$(Build.SourcesDirectory)'
+- name: DOCKER_IMAGE_NAME
+  type: string
+  default: ''
+- name: DOCKER_IMAGE_TAG
+  type: string
+  default: ''
+- name: DOCKER_REGISTRY
+  type: string
+  default: ''
+- name: DOCKERFILE_PATH
+  type: string
+  default: '$(Build.SourcesDirectory)/Dockerfile'
+- name: EXECUTE_GITVERSION
+  type: boolean
+  default: false
+- name: VM_IMAGE
+  type: string
+  default: '' # Exemplo: ubuntu-20.04
+
+jobs:
+  - job: build_job
+    displayName: "Build"
+    dependsOn: ${{parameters.DEPENDS_ON}}
+    pool:
+      vmImage: ubuntu-20.04
+      demands:
+        - java
+    steps:
+      - template: ../../../shared/steps/checkout-repository.yaml
+
+      - ${{ if eq(parameters['EXECUTE_GITVERSION'], 'True') }}:
+        - template: ../../shared/steps/gitversion/setup-gitversion.yml
+
+        - template: ../../shared/steps/gitversion/execute-gitversion.yml
+
+      - template: ../../shared/steps/docker/docker-build.yml
+        parameters:
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+          DOCKER_BUILD_ARGS: ${{ parameters.DOCKER_BUILD_ARGS }}
+          DOCKER_BUILD_CONTEXT_FOLDER: ${{ parameters.DOCKER_BUILD_CONTEXT_FOLDER }}
+          DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
+          DOCKER_IMAGE_TAG: ${{ parameters.APPLICATION_VERSION }}
+          DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
+          DOCKERFILE_PATH: ${{ parameters.DOCKERFILE_PATH }}
+          
+      - template: ../../shared/steps/docker/docker-push.yml
+        parameters:
+          CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME: ${{ parameters.CONTAINER_REGISTRY_SERVICE_CONNECTION_NAME }}
+          DOCKER_IMAGE_NAME: ${{ parameters.DOCKER_IMAGE_NAME }}
+          DOCKER_IMAGE_TAG: ${{ parameters.APPLICATION_VERSION }}
+          DOCKER_REGISTRY: ${{ parameters.DOCKER_REGISTRY }}
