@@ -55,3 +55,4 @@ steps:
         sonar.test=${{parameters.SONAR_TEST_PATH}}
         sonar.dynamicAnalysis=reuseReports
         sonar.scm.disabled=true
+        sonar.language=python
