@@ -23,6 +23,9 @@ parameters:
 - name: SONAR_EXCLUSIONS
   type: string
   default: '$(SONAR_EXCLUSIONS)'
+- name: SONAR_PYTHON_VERSION
+  type: string
+  default: '$(PYTHON_VERSION)'
 
 
 steps:
@@ -35,8 +38,10 @@ steps:
       configMode: 'manual'
       cliProjectKey: '${{parameters.SONAR_PROJECT_KEY}}'
       cliProjectName: '${{parameters.SONAR_PROJECT_NAME}}'
-      cliSources: '${{parameters.SONAR_PATH_SOURCES}}'
+      cliSources: '.'
       extraProperties: |
         sonar.python.coverage.reportPaths=${{parameters.SONAR_COVERAGE_REPORT_PATH}}
         sonar.python.xunit.reportPath=${{parameters.SONAR_XUNIT_REPORT_PATH}}
         sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
+        sonar.python.version=${{parameters.SONAR_PYTHON_VERSION}}
+        sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
