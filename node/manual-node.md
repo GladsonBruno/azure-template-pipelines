@@ -1,5 +1,5 @@
 ## Manual template Node
-O template Maven cobre os seguintes pontos:
+O template Node cobre os seguintes pontos:
 
 * Versionamento automático
 
@@ -18,6 +18,8 @@ Um exemplo de utilização pode ser visto neste [link](https://github.com/Gladso
 ## Pré requisitos
 * Possuir o Azure DevOps devidamente configurado conforme recomendado neste [manual](../README.md).
 
+* O build da aplicação deve ocorrer dentro do Dockerfile.
+
 * Possuir pelo menos um teste unitário implementado ou vazio. ( Caso queira ter as informações de Code Coverage no Sonar e Azure. )
 
 * Utilizar o [Jest](https://jestjs.io/pt-BR/) como framework de testes.
@@ -31,7 +33,7 @@ Um exemplo de utilização pode ser visto neste [link](https://github.com/Gladso
 * Possuir o Jest devidamente configurado para gerar os reports **lcov.info**(Report de Code Coverage esperado pelo SonarCloud) e **coverage.xml**(Report de Code Coverage esperado pelo Azure DevOps).
 
 ## Configuração da aplicação prévia a utilização do template Node
-### Pacotes NPM recomendados para utilizar na aplicação:
+### Pacotes NPM que recomendados para utilizar na aplicação:
 ```
 npm install --save-dev jest
 npm install --save-dev ts-jest
