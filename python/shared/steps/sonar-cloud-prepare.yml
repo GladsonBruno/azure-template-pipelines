@@ -23,6 +23,12 @@ parameters:
 - name: SONAR_EXCLUSIONS
   type: string
   default: '$(SONAR_EXCLUSIONS)'
+- name: SONAR_INCLUSIONS
+  type: string
+  default: $(SONAR_INCLUSIONS) # Exemplo: '**/*.py'
+- name: SONAR_TEST_PATH
+  type: string
+  default: $(TEST_PATH)
 - name: SONAR_PYTHON_VERSION
   type: string
   default: '$(PYTHON_VERSION)'
@@ -42,6 +48,8 @@ steps:
       extraProperties: |
         sonar.python.coverage.reportPaths=${{parameters.SONAR_COVERAGE_REPORT_PATH}}
         sonar.python.xunit.reportPath=${{parameters.SONAR_XUNIT_REPORT_PATH}}
+        sonar.inclusions=${{ parameters.SONAR_INCLUSIONS }}
         sonar.exclusions=${{parameters.SONAR_EXCLUSIONS}}
         sonar.python.version=${{parameters.SONAR_PYTHON_VERSION}}
         sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
+        sonar.test=${{parameters.SONAR_TEST_PATH}}
