@@ -90,13 +90,14 @@ jobs:
           SONAR_PROJECT_NAME: ${{ parameters.SONAR_PROJECT_NAME }}
           SONAR_PATH_SOURCES: ${{ parameters.SONAR_PATH_SOURCES }}
           SONAR_COVERAGE_REPORT_PATH: ${{ parameters.SONAR_COVERAGE_REPORT_PATH }}
-          SONAR_JUNIT_REPORT_PATH: ${{ parameters.SONAR_JUNIT_REPORT_PATH }}
           SONAR_XUNIT_REPORT_PATH: ${{ parameters.SONAR_XUNIT_REPORT_PATH }}
           SONAR_EXCLUSIONS: ${{ parameters.SONAR_EXCLUSIONS }}
 
       - template: ../shared/steps/pytest-coverage.yml
         parameters:
           COVERAGERC_PATH: ${{ parameters.COVERAGERC_PATH }}
+          SONAR_JUNIT_REPORT_PATH: ${{ parameters.SONAR_JUNIT_REPORT_PATH }}
+          SONAR_XUNIT_REPORT_PATH: ${{ parameters.SONAR_XUNIT_REPORT_PATH }}
           TEST_PATH: ${{ parameters.TEST_PATH }}
 
       - template: ../../shared/steps/publish-cobertura-coverage-results.yml
