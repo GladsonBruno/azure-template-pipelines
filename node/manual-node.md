@@ -39,7 +39,7 @@ npm install --save-dev @types/jest
 npm install --save-dev jest-sonar-reporter
 ```
 
-### Scripts a serem configurados no package.json:
+### Scripts a serem configurados no arquivo package.json:
 ```
 # Configuração esperada do script 'test'
 "test": "jest --coverage --coverageReporters=cobertura"
