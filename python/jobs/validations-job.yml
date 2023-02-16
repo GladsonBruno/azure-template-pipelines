@@ -101,7 +101,7 @@ jobs:
 
       - template: ../../shared/steps/sonar/sonar-analyze.yml
 
-      - template: ../../shared/steps/sonar/sonar-publish.yml
+      - template: ../../shared/steps/sonar/sonar-cloud-publish.yml
 
       - template: ../../shared/steps/sonar/sonar-cloud-build-breaker.yml
         parameters:
