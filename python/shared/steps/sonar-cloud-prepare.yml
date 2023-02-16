@@ -53,3 +53,5 @@ steps:
         sonar.python.version=${{parameters.SONAR_PYTHON_VERSION}}
         sonar.sources=${{parameters.SONAR_PATH_SOURCES}}
         sonar.test=${{parameters.SONAR_TEST_PATH}}
+        sonar.dynamicAnalysis=reuseReports
+        sonar.scm.disabled=true
