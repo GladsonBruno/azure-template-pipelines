@@ -131,7 +131,7 @@ Após isso crie um variable group no Azure DevOps contendo as seguinte variávei
 
 * **COVERAGE_REPORT_PATH**: Informa ao CI onde encontrar o arquivo coverage.xml que irá conter as informações de Code Coverage esperadas pela pipeline. O valor que uso normalmente é **\*\*/\*coverage.xml**
 
-* **IMAGE_NAME**: Nome que será atribuído ao seu container Docker.
+* **IMAGE_NAME**: Nome que será atribuído ao seu container Docker. Recomendo nomear o container com letras minúsculas separadas por **-**. Exemplo: **demo-api**
 
 * **NODEJS_VERSION**: Informa a pipeline a versão do Node utilizado pela aplicação. Exemplo: **14**, **16**.
 

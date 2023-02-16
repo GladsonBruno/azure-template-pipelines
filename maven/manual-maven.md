@@ -114,7 +114,7 @@ extends:
 
 Após isso crie um variable group no Azure DevOps contendo as seguinte variáveis:
 
-* **IMAGE_NAME**: Nome que será atribuído ao seu container Docker.
+* **IMAGE_NAME**: Nome que será atribuído ao seu container Docker. Recomendo nomear o container com letras minúsculas separadas por **-**. Exemplo: **demo-api**
 
 * **JACOCO_REPORT_PATH** Pasta no qual o report de code coverage do Jacoco será gerado. Por padrão o valor desta variável é: **\*\*/jacoco.xml**
 
