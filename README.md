@@ -33,4 +33,4 @@ Para utilizar o template Node faça a leitura do seguinte manual:
 
 ## Template Python
 Para utilizar o template Python faça a leitura do seguinte manual:
-* [Manual Template Python](./Python/manual-python.md).
+* [Manual Template Python](./python/manual-python.md).
