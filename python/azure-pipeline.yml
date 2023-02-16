@@ -96,10 +96,7 @@ stages:
   - stage: build_stage
     displayName: "Build"
     dependsOn: [ "validations_stage" ]
-    condition: or(
-      eq(variables['Build.SourceBranchName'], 'master'),
-      eq(variables['Build.SourceBranchName'], 'develop')
-      )
+    condition: eq(variables['Build.SourceBranchName'], 'master')
     variables:
       APPLICATION_VERSION: $[ stageDependencies.validations_stage.unit_test_and_sonar_cloud_job.outputs['gitversion.VERSION'] ]
     jobs: 
