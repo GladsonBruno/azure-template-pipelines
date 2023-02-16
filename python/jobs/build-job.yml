@@ -38,7 +38,7 @@ jobs:
       demands:
         - java
     steps:
-      - template: ../../../shared/steps/checkout-repository.yaml
+      - template: ../../shared/steps/checkout-repository.yml
 
       - ${{ if eq(parameters['EXECUTE_GITVERSION'], 'True') }}:
         - template: ../../shared/steps/gitversion/setup-gitversion.yml
