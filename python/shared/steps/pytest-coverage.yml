@@ -14,5 +14,5 @@ parameters:
 
 steps:
   - script: |
-      pytest --cov=. --cov-report=xml --cov-report=html --cov-config=${{ parameters.COVERAGERC_PATH }} --nunitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} --junitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} ${{ parameters.TEST_PATH }}
+      pytest --cov=. --cov-report=xml --cov-report=html --cov-config=${{ parameters.COVERAGERC_PATH }} --nunitxml=${{ parameters.SONAR_XUNIT_REPORT_PATH }} --junitxml=${{ parameters.SONAR_JUNIT_REPORT_PATH }} ${{ parameters.TEST_PATH }}
     displayName: '[Test] Execute Unit Tests'
