@@ -121,7 +121,7 @@ Após isso crie um variable group no Azure DevOps contendo as seguinte variávei
 
 * **TEST_OPTIONS**: Informa ao CI as opções de build a serem utilizas no comando **dotnet test**. Exemplo: **--settings ./coverlet.runsettings.xml --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover**
 
-Com o variable group criado insira o nome dele na pipeline substituindo o variable group **node-ci-example**.
+Com o variable group criado insira o nome dele na pipeline substituindo o variable group **dotnet-ci-example**.
 
 Exemplo do arquivo de pipeline após finalizar a configuração:
 ```
