@@ -13,10 +13,7 @@ parameters:
   default: '$(Build.SourcesDirectory)'
 - name: DOCKER_IMAGE_NAME
   type: string
-  default: ''
-- name: DOCKER_IMAGE_TAG
-  type: string
-  default: ''
+  default: '$(IMAGE_NAME)'
 - name: DOCKER_REGISTRY
   type: string
   default: 'gladsonbruno'
