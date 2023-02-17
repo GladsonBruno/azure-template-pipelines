@@ -1,6 +1,21 @@
 # Sobre o projeto
 O projeto tem o objetivo de ser usado como template de pipelines para o Azure DevOps.
 
+Todos os templates disponíveis neste projeto combrem os seguintes pontos:
+
+* Versionamento automático
+
+* Qualidade de código com Sonar Cloud
+
+* Testes unitários
+
+* Code Coverage
+
+* Criação de container Docker
+
+* Scan de vulnerabilidades no container Docker gerado
+
+
 # Pré-requisitos para utilização
 * Possuir um Service Connection configurado no Azure DevOps para realizar a interface entre o Docker Registry e o Azure DevOps.
 
