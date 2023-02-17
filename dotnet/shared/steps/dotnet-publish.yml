@@ -2,9 +2,9 @@ parameters:
 - name: APPLICATION_VERSION
   type: string
   default: $(GitVersion.SemVer)
-- name: SOLUTIONFILE_PATH
+- name: BUILD_PATH
   type: string
-  default: $(SOLUTIONFILE_PATH)
+  default: $(BUILD_PATH)
 - name: PUBLISH_OPTIONS
   type: string
   default: $(PUBLISH_OPTIONS)
@@ -15,7 +15,7 @@ steps:
     inputs:
       command: 'publish'
       publishWebProjects: false
-      projects: '${{ parameters.SOLUTIONFILE_PATH }}'
+      projects: '${{ parameters.BUILD_PATH }}'
       arguments: '${{ parameters.PUBLISH_OPTIONS }} -p:Version=${{parameters.APPLICATION_VERSION}}'
       zipAfterPublish: false
       modifyOutputPath: false
