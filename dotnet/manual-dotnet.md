@@ -45,7 +45,7 @@ Crie o arquivo **coverlet.runsettings.xml** na pasta raiz de seu projeto com o s
 ### Validando a configuração da aplicação
 Após realizar as configurações dos tópicos anteriores em sua aplicação execute os seguintes comandos para validar se a mesma foi devidamente configurada:
 
-**OBSERVAÇÃO IMPORTANTE**: Substitua **./aspnet-demo-api.sln** pelo caminho no qual se encontra o arquivo **.sln** de seu projeto.
+**OBSERVAÇÃO IMPORTANTE**: Substitua **./aspnet-demo-api.sln** pelo caminho no qual se encontra o arquivo **.sln** principal de seu projeto.
 
 ```
 dotnet restore
