@@ -99,7 +99,7 @@ Após isso crie um variable group no Azure DevOps contendo as seguinte variávei
 
 * **BUILD_OPTIONS** Informa ao CI as opções de build a serem utilizas no comando **dotnet build**. Exemplo: **-c Release -o ./app/build**
 
-* **BUILD_PATH**: Informa ao CI o path do arquivo **.csproj** da solução pricipal de seu projeto. Exemplo: **$(Build.SourcesDirectory)/aspnet-demo-api/aspnet-demo-api.csproj**
+* **BUILD_PATH**: Informa ao CI o path do arquivo **.csproj** da solução principal de seu projeto. Exemplo: **$(Build.SourcesDirectory)/aspnet-demo-api/aspnet-demo-api.csproj**
 
 * **DOTNET_SDK_VERSION**: Informa a pipeline a versão do AspNet/Dotnet utilizado pela aplicação. Exemplo: **3.x**, **6.x**.
 
@@ -111,7 +111,7 @@ Após isso crie um variable group no Azure DevOps contendo as seguinte variávei
 
 * **PUBLISH_OPTIONS**: Informa ao CI as opções de build a serem utilizas no comando **dotnet publish**. Exemplo: **-c Release -o ./app/publish /p:UseAppHost=false**
 
-* **SOLUTIONFILE_PATH**: Informa ao CI o path do arquivo **.sln** da solução pricipal de seu projeto. Exemplo: **$(Build.SourcesDirectory)/aspnet-demo-api.sln**
+* **SOLUTIONFILE_PATH**: Informa ao CI o path do arquivo **.sln** da solução principal de seu projeto. Exemplo: **$(Build.SourcesDirectory)/aspnet-demo-api.sln**
 
 * **SONAR_EXCLUSIONS**: Informa ao Sonar Cloud quais diretórios e arquivos serão excluídos da análise de qualidade. O valor que uso normalmente é: **\*\*/obj/\*\*,\*\*/\*.dll,\*\*/\*Test.cs**
 
