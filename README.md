@@ -26,6 +26,11 @@ O projeto tem o objetivo de ser usado como template de pipelines para o Azure De
 Para utilizar o template Maven faça a leitura do seguinte manual:
 * [Manual Template Maven](./maven/manual-maven.md).
 
+## Template Dotnet
+Para utilizar o template Dotnet faça a leitura do seguinte manual:
+* [Manual Template Dotnet](./dotnet/manual-dotnet.md).
+
+
 ## Template Node
 Para utilizar o template Node faça a leitura do seguinte manual:
 * [Manual Template Node](./node/manual-node.md).
