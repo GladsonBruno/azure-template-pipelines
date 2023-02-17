@@ -1,0 +1,21 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: BUILD_OPTIONS
+  type: string
+  default: $(BUILD_OPTIONS)
+- name: PUBLISH_OPTIONS
+  type: string
+  default: $(PUBLISH_OPTIONS)
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: '[Build] Dotnet Publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: '${{ parameters.BUILD_OPTIONS }}'
+      arguments: '${{ parameters.PUBLISH_OPTIONS }} -p:Version=${{parameters.APPLICATION_VERSION}}'
+      zipAfterPublish: false
+      modifyOutputPath: false
