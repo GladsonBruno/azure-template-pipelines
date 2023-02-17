@@ -32,5 +32,5 @@ steps:
       projectName: ${{ parameters.SONAR_PROJECT_NAME }}
       extraProperties: |
         sonar.exclusions=${{ parameters.SONAR_EXCLUSIONS }}
-        sonar.cs.opencover.reportsPaths=${{ parameter.OPENCOVER_REPORT_PATH }}
-        sonar.cs.vstest.reportsPaths=${{ parameter.OPENCOVER_VSTEST_REPORT_PATH }}
+        sonar.cs.opencover.reportsPaths=${{ parameters.OPENCOVER_REPORT_PATH }}
+        sonar.cs.vstest.reportsPaths=${{ parameters.OPENCOVER_VSTEST_REPORT_PATH }}
