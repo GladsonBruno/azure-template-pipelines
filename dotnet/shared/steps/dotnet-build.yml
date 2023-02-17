@@ -1,0 +1,33 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: BUILD_OPTIONS
+  type: string
+  default: $(BUILD_OPTIONS)
+- name: BUILD_REASON
+  type: string
+  default: '[Build]'
+  values: 
+  - '[Build]'
+  - '[DockerBuild]'
+  - '[SonarCloud]'
+- name: SOLUTIONFILE_PATH
+  type: string
+  default: $(SOLUTIONFILE_PATH)
+
+steps:
+  - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    - task: DotNetCoreCLI@2
+      displayName: '${{parameters.BUILD_REASON}} Dotnet Build'
+      inputs:
+        command: 'build'
+        projects: ${{ parameters.SOLUTIONFILE_PATH }}
+        arguments: '${{ parameters.BUILD_OPTIONS }} -p:Version=$(GitVersion.SemVer)'
+  - ${{ else }}:
+    - task: DotNetCoreCLI@2
+      displayName: '${{parameters.BUILD_REASON}} Dotnet Build'
+      inputs:
+        command: 'build'
+        projects:  ${{ parameters.SOLUTIONFILE_PATH }}
+        arguments: '${{ parameters.BUILD_OPTIONS }} -p:Version=${{parameters.APPLICATION_VERSION}}'

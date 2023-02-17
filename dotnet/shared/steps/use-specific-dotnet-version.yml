@@ -1,0 +1,11 @@
+parameters:
+- name: DOTNET_USED_VERSION
+  type: string
+  default: $(DOTNET_SDK_VERSION)
+
+steps:
+- task: UseDotNet@2
+  displayName: "[Setup] Use DotNet ${{parameters.DOTNET_USED_VERSION}}"
+  inputs:
+    packageType: 'sdk'
+    version: ${{parameters.DOTNET_USED_VERSION}}

@@ -1,0 +1,11 @@
+parameters:
+- name: SOLUTIONFILE_PATH
+  type: string
+  default: $(SOLUTIONFILE_PATH)
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: '[Restore] Dotnet Restore'
+    inputs:
+      command: 'restore'
+      projects: ${{ parameters.SOLUTIONFILE_PATH }}

@@ -1,0 +1,54 @@
+parameters:
+- name: APPLICATION_VERSION
+  type: string
+  default: $(GitVersion.SemVer)
+- name: DOTNET_USED_VERSION
+  type: string
+  default: $(DOTNET_SDK_VERSION)
+- name: EXECUTE_GITVERSION
+  type: boolean
+  default: true
+- name: SONAR_CLOUD_ORGANIZATION
+  type: string
+  default: 'portifoliogladson'
+- name: SONAR_CLOUD_SERVICE_CONNECTION_NAME
+  type: string
+  default: 'SonarCloud'
+- name: SONAR_EXCLUSIONS
+  type: string
+  default: '$(SONAR_EXCLUSIONS)'
+- name: SONAR_PROJECT_KEY
+  type: string
+  default: $(SONAR_PROJECT_KEY)
+- name: SONAR_PROJECT_NAME
+  type: string
+  default: $(SONAR_PROJECT_NAME)
+- name: VM_IMAGE
+  type: string
+  default: 'ubuntu-20.04'
+
+stages:
+  - stage: validations_stage
+    displayName: "Validations"
+    condition: | 
+      or(
+        eq(variables['Build.Reason'], 'PullRequest'),
+        and(
+          ne(variables['Build.Reason'], 'PullRequest'),
+          or(
+            eq(variables['Build.SourceBranchName'], 'master'),
+            eq(variables['Build.SourceBranchName'], 'develop')
+          )
+        )
+      )
+    variables:
+      APPLICATION_VERSION: ${{ parameters.APPLICATION_VERSION }}
+    jobs: 
+      - template: ./jobs/validations-job.yml
+        parameters:
+          APPLICATION_VERSION: $(APPLICATION_VERSION)
+          DOTNET_USED_VERSION: ${{ parameters.DOTNET_USED_VERSION }}
+          EXECUTE_GITVERSION: true
+          SONAR_CLOUD_ORGANIZATION: ${{ parameters.SONAR_CLOUD_ORGANIZATION }}
+          SONAR_CLOUD_SERVICE_CONNECTION_NAME: ${{ parameters.SONAR_CLOUD_SERVICE_CONNECTION_NAME }}
+          VM_IMAGE: ${{ parameters.VM_IMAGE }}
