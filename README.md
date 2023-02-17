@@ -1,7 +1,7 @@
 # Sobre o projeto
 O projeto tem o objetivo de ser usado como template de pipelines para o Azure DevOps.
 
-Todos os templates disponíveis neste projeto combrem os seguintes pontos:
+Todos os templates disponíveis neste projeto possuem os seguintes pontos implementados:
 
 * Versionamento automático
 
