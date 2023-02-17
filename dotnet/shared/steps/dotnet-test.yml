@@ -1,0 +1,16 @@
+parameters:
+- name: SOLUTIONFILE_PATH
+  type: string
+  default: $(SOLUTIONFILE_PATH)
+- name: TEST_OPTIONS
+  type: string
+  default: $(TEST_OPTIONS)
+
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: '[Test] Dotnet Test'
+    inputs:
+      command: 'test'
+      projects: ${{ parameters.SOLUTIONFILE_PATH }}
+      arguments: '${{ parameters.TEST_OPTIONS }}'
